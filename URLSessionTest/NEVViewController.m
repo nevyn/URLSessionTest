@@ -8,7 +8,7 @@
 
 #import "NEVViewController.h"
 
-@interface NEVViewController () <NSURLSessionDelegate>
+@interface NEVViewController () <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 {
     NSURLSession *_urlSession;
     NSTimer *_statusTimer;
@@ -67,6 +67,11 @@
     }
 }
 
+- (IBAction)terminate:(id)sender
+{
+    exit(13);
+}
+
 - (void)uploadBigFile
 {
     size_t s = 1024*1024*10;
@@ -114,7 +119,15 @@ NSString *stringFromFileSize(unsigned long long theSize)
         sent += task.countOfBytesSent;
         toSend += task.countOfBytesExpectedToSend;
     }
-    _statusLabel.text = [NSString stringWithFormat:@"%@ being uploaded (%@ of %@)", [_tasks valueForKeyPath:@"taskDescription"], stringFromFileSize(sent), stringFromFileSize(toSend)];
+    _statusLabel.text = [NSString stringWithFormat:@"%@ being uploaded (%@ of %@)\nFiles on disk: %@",
+        [_tasks valueForKeyPath:@"taskDescription"],
+        stringFromFileSize(sent),
+        stringFromFileSize(toSend),
+        
+        [[NSFileManager defaultManager]
+            contentsOfDirectoryAtPath:NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]
+            error:NULL]
+    ];
 }
 
 #pragma mark -
@@ -129,13 +142,13 @@ NSString *stringFromFileSize(unsigned long long theSize)
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
 {
-    NSLog(@"Lookback sadface :( %@", error);
+    NSLog(@"sadface :( %@", error);
 }
 
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
 {
-    NSLog(@"Lookback finihed events for bg session");
+    NSLog(@"finihed events for bg session");
 }
 
 
