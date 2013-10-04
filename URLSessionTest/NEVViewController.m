@@ -96,7 +96,6 @@
     uint64_t bytesTotalForThisFile = [[[NSFileManager defaultManager] attributesOfItemAtPath:fullPath.path error:NULL] fileSize];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://Reika.local/upload.php?name=%@", name]];
-//    NSURL *url = [NSURL URLWithString:@"https://s3-eu-west-1.amazonaws.com/lookback-production/CkxdQiNYRSd83y2Bs/screen.m4v?Expires=1381061204&AWSAccessKeyId=AKIAJC77E2MNKD4ZK2ZA&Signature=6T4dPzgjLR1m3FzIQGcSwC%2B%2ByjA%3D"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setValue:[NSString stringWithFormat:@"%llu", bytesTotalForThisFile] forHTTPHeaderField:@"Content-Length"];
