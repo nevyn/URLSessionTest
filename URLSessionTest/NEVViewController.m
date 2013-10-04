@@ -50,6 +50,11 @@
             [_tasks addObject:task];
             [task resume];
         }
+        for(NSURLSessionDownloadTask *task in downloadTasks) {
+            NSLog(@"Restored download task %zu for %@", (unsigned long)task.taskIdentifier, task.originalRequest.URL);
+            [_tasks addObject:task];
+            [task resume];
+        }
         
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
     }];
@@ -74,7 +79,7 @@
 
 - (void)uploadBigFile
 {
-    size_t s = 1024*1024*10;
+    size_t s = 128; //1024*1024*10;
     char *big = malloc(s);
     NSData *d = [NSData dataWithBytesNoCopy:big length:s freeWhenDone:YES];
     
@@ -83,16 +88,19 @@
     NSURL *fullPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:name]];
     [d writeToFile:fullPath.path atomically:NO];
     uint64_t bytesTotalForThisFile = [[[NSFileManager defaultManager] attributesOfItemAtPath:fullPath.path error:NULL] fileSize];
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://Reika.local/upload.php?name=%@", name]]];
-    [request setHTTPMethod:@"POST"];
+    
+    //NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://Reika.local/upload.php?name=%@", name]];
+    NSURL *url = [NSURL URLWithString:@"https://s3-eu-west-1.amazonaws.com/lookback-production/qFemC7bf9c4ZdLFAu/screen.m4v?Expires=1381060455&AWSAccessKeyId=AKIAJC77E2MNKD4ZK2ZA&Signature=uu1r%2BTI9apJwpnp3i1w2BqB4Qa8%3D"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    [request setHTTPMethod:@"PUT"];
     [request setValue:[NSString stringWithFormat:@"%llu", bytesTotalForThisFile] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
+
     NSURLSessionUploadTask *task = [_urlSession uploadTaskWithRequest:request fromFile:fullPath];
     task.taskDescription = name;
     [_tasks addObject:task];
     NSLog(@"Started upload for %@ as task %zu/%@/%@", fullPath.lastPathComponent, (unsigned long)task.taskIdentifier, task.taskDescription, task);
     [task resume];
-
 }
 
 // http://stackoverflow.com/a/572623/48125
