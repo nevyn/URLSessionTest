@@ -44,9 +44,5 @@ It seems a background upload task continues no matter what, even if the app is u
 
 Upload tasks get the `Content-Type: application/octet-stream` if you don't supply a Content-Type yourself. `Content-Length` is also set automatically.
 
-
-What I still don't understand
------------------------------
-
-In my test app, only 128kb gets uploaded. o_O
+When uploading to S3, it seems the connection will just hang after 128kb if your request is invalid somehow. Send a smaller request to receive error code and error message.
 
