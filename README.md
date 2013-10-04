@@ -40,6 +40,11 @@ I don't know what the point is of `-[NSURLSession finishTasksAndInvalidate:]`.
 
 It seems a background upload task continues no matter what, even if the app is uninstalled.
 
+`-[NSURLSessionDataDelegate URLSession:dataTask:didReceiveData:]` is called even for a background upload task, even though that method is only supposed to be called for data tasks. Yay!
+
+Upload tasks get the `Content-Type: application/octet-stream` if you don't supply a Content-Type yourself. `Content-Length` is also set automatically.
+
+
 What I still don't understand
 -----------------------------
 
