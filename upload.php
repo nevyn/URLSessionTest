@@ -5,7 +5,7 @@ if($_GET["name"])
 
 $size = getallheaders()["Content-Length"];
 
-file_put_contents("/tmp/access.log", $_SERVER['REMOTE_ADDR']." GET  /upload.php ".$uuid." for ".$size." bytes\n", FILE_APPEND);
+file_put_contents("/tmp/access.log", $_SERVER['REMOTE_ADDR']." GET  /upload.php ".$uuid." for ".$size." bytes\n".print_r(getallheaders())."\n", FILE_APPEND);
 
 
 $f = fopen("php://input", "r");
@@ -20,7 +20,7 @@ while(!feof($f) && $size > 0) {
     }
     $percentReceived = ($received / $size) * 100;
     file_put_contents("/tmp/access.log", $_SERVER['REMOTE_ADDR']." ".$percentReceived."% /upload.php ".$uuid."\n", FILE_APPEND);
-    sleep(2);
+    //sleep(1);
 }
 
 file_put_contents("/tmp/access.log", $_SERVER['REMOTE_ADDR']." ".($received == $size ? "DONE" : @"CANCEL") . " /upload.php ".$uuid."\n", FILE_APPEND);

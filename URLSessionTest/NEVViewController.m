@@ -8,6 +8,8 @@
 
 #import "NEVViewController.h"
 
+#define USE_BACKGROUND_SESSION 1
+
 @interface NEVViewController () <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 {
     NSURLSession *_urlSession;
@@ -21,7 +23,11 @@
 - (void)viewDidLoad
 {
     _tasks = [NSMutableArray new];
-    NSURLSessionConfiguration *conf = [NSURLSessionConfiguration backgroundSessionConfiguration:[NSString stringWithFormat:@"test"]];
+#if USE_BACKGROUND_SESSION
+    NSURLSessionConfiguration *conf = [NSURLSessionConfiguration backgroundSessionConfiguration:@"test"];
+#else
+    NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
+#endif
     conf.allowsCellularAccess = NO;
     _urlSession = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     [self start];
@@ -79,7 +85,7 @@
 
 - (void)uploadBigFile
 {
-    size_t s = 128; //1024*1024*10;
+    size_t s = 1024*1024*10;
     char *big = malloc(s);
     NSData *d = [NSData dataWithBytesNoCopy:big length:s freeWhenDone:YES];
     
@@ -89,14 +95,19 @@
     [d writeToFile:fullPath.path atomically:NO];
     uint64_t bytesTotalForThisFile = [[[NSFileManager defaultManager] attributesOfItemAtPath:fullPath.path error:NULL] fileSize];
     
-    //NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://Reika.local/upload.php?name=%@", name]];
-    NSURL *url = [NSURL URLWithString:@"https://s3-eu-west-1.amazonaws.com/lookback-production/qFemC7bf9c4ZdLFAu/screen.m4v?Expires=1381060455&AWSAccessKeyId=AKIAJC77E2MNKD4ZK2ZA&Signature=uu1r%2BTI9apJwpnp3i1w2BqB4Qa8%3D"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://Reika.local/upload.php?name=%@", name]];
+//    NSURL *url = [NSURL URLWithString:@"https://s3-eu-west-1.amazonaws.com/lookback-production/CkxdQiNYRSd83y2Bs/screen.m4v?Expires=1381061204&AWSAccessKeyId=AKIAJC77E2MNKD4ZK2ZA&Signature=6T4dPzgjLR1m3FzIQGcSwC%2B%2ByjA%3D"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request setHTTPMethod:@"PUT"];
+    [request setHTTPMethod:@"POST"];
     [request setValue:[NSString stringWithFormat:@"%llu", bytesTotalForThisFile] forHTTPHeaderField:@"Content-Length"];
     [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
 
-    NSURLSessionUploadTask *task = [_urlSession uploadTaskWithRequest:request fromFile:fullPath];
+#if USE_BACKGROUND_SESSION
+    NSURLSessionTask *task = [_urlSession uploadTaskWithRequest:request fromFile:fullPath];
+#else
+    [request setHTTPBody:d];
+    NSURLSessionTask *task = [_urlSession dataTaskWithRequest:request];
+#endif
     task.taskDescription = name;
     [_tasks addObject:task];
     NSLog(@"Started upload for %@ as task %zu/%@/%@", fullPath.lastPathComponent, (unsigned long)task.taskIdentifier, task.taskDescription, task);
@@ -146,6 +157,12 @@ NSString *stringFromFileSize(unsigned long long theSize)
     [_tasks removeObject:task];
     NSURL *fullPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:task.taskDescription]];
     [[NSFileManager defaultManager] removeItemAtURL:fullPath error:NULL];
+}
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+                                     didReceiveData:(NSData *)data
+{
+    NSLog(@"Response:: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
 }
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
