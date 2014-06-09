@@ -5,6 +5,11 @@ if($_GET["name"])
 
 $size = getallheaders()["Content-Length"];
 
+if($_GET["notify"]) {
+  file_put_contents("/tmp/access.log", $_SERVER['REMOTE_ADDR']." GET  /upload.php: Notify '".$_GET["notify"]."'\n", FILE_APPEND);
+  exit(0);
+}
+
 file_put_contents("/tmp/access.log", $_SERVER['REMOTE_ADDR']." GET  /upload.php ".$uuid." for ".$size." bytes\nHeaders: ".print_r(getallheaders(), true)."\n", FILE_APPEND);
 
 

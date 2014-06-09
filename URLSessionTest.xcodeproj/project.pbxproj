@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		051839B61945D54B00A3DFB9 /* NEVUploadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 051839B51945D54B00A3DFB9 /* NEVUploadController.m */; };
 		0553EDDA17FD879A00AB6C5D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0553EDD917FD879A00AB6C5D /* Foundation.framework */; };
 		0553EDDC17FD879A00AB6C5D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0553EDDB17FD879A00AB6C5D /* CoreGraphics.framework */; };
 		0553EDDE17FD879A00AB6C5D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0553EDDD17FD879A00AB6C5D /* UIKit.framework */; };
@@ -34,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		051839B41945D54B00A3DFB9 /* NEVUploadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NEVUploadController.h; sourceTree = "<group>"; };
+		051839B51945D54B00A3DFB9 /* NEVUploadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NEVUploadController.m; sourceTree = "<group>"; };
 		0553EDD617FD879A00AB6C5D /* URLSessionTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = URLSessionTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0553EDD917FD879A00AB6C5D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0553EDDB17FD879A00AB6C5D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -117,6 +120,8 @@
 				0553EDEB17FD879A00AB6C5D /* Main.storyboard */,
 				0553EDEE17FD879A00AB6C5D /* NEVViewController.h */,
 				0553EDEF17FD879A00AB6C5D /* NEVViewController.m */,
+				051839B41945D54B00A3DFB9 /* NEVUploadController.h */,
+				051839B51945D54B00A3DFB9 /* NEVUploadController.m */,
 				0553EDF117FD879A00AB6C5D /* Images.xcassets */,
 				0553EDE017FD879A00AB6C5D /* Supporting Files */,
 			);
@@ -252,6 +257,7 @@
 			files = (
 				0553EDEA17FD879A00AB6C5D /* NEVAppDelegate.m in Sources */,
 				0553EDF017FD879A00AB6C5D /* NEVViewController.m in Sources */,
+				051839B61945D54B00A3DFB9 /* NEVUploadController.m in Sources */,
 				0553EDE617FD879A00AB6C5D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -383,6 +389,7 @@
 				GCC_PREFIX_HEADER = "URLSessionTest/URLSessionTest-Prefix.pch";
 				INFOPLIST_FILE = "URLSessionTest/URLSessionTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F36B8C58-D702-4AA2-AF54-80D7B7844B59";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -396,6 +403,7 @@
 				GCC_PREFIX_HEADER = "URLSessionTest/URLSessionTest-Prefix.pch";
 				INFOPLIST_FILE = "URLSessionTest/URLSessionTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F36B8C58-D702-4AA2-AF54-80D7B7844B59";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -461,6 +469,7 @@
 				0553EE0A17FD879A00AB6C5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0553EE0B17FD879A00AB6C5D /* Build configuration list for PBXNativeTarget "URLSessionTestTests" */ = {
 			isa = XCConfigurationList;
@@ -469,6 +478,7 @@
 				0553EE0D17FD879A00AB6C5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
